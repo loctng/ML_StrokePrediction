@@ -27,9 +27,9 @@ def removeOutliers(data, features):
   return data.loc[~removeIdx]
 
 
-data = pd.read_csv('healthcare-dataset-stroke-data.csv')
+data = pd.read_csv('dataset/healthcare-dataset-stroke-data.csv')
 
-# Clean missing values, which only appear in BMI column
+# Clean-up missing values, which only appear in BMI column
 noBMI = np.isnan(data["bmi"])
 data = data.loc[~noBMI]
 data = data.reset_index(drop=True)
@@ -39,19 +39,11 @@ data = removeOutliers(data, ["age", "avg_glucose_level", "bmi"])
 data = data.reset_index(drop=True)
 
 # Drop unnecessary features
-data = data.drop(columns=["id", "work_type"])
+data = data.drop(columns=["id"])
 
 # One-hot-encoding some features
-data = pd.get_dummies(data, columns=["gender", "ever_married", "Residence_type", "smoking_status"], dtype=int)
-data = data.drop(columns=["gender_Other", "ever_married_No", "Residence_type_Rural", "smoking_status_Unknown"])
-data = data.rename(
-  columns={"ever_married_Yes": "married", 
-           "Residence_type_Urban": "residence_urban",
-           "smoking_status_formerly smoked": "smoking_formerly",
-           "smoking_status_never smoked": "smoking_never",
-           "smoking_status_smokes": "smoking_yes"
-          }
-)
+data = pd.get_dummies(data, columns=["gender", "ever_married", "Residence_type", "smoking_status", "work_type"], dtype=int)
+data = data.drop(columns=["gender_Other"])    # Only contains 1 instance
 
 # Standardize numerical features
 numerical_features = ["age", "avg_glucose_level", "bmi"]
@@ -64,4 +56,4 @@ numerical_values.columns = numerical_features
 data = data.drop(columns=numerical_features)
 data = pd.concat([data, numerical_values], axis=1)
 
-data.to_csv("ProcessedData.csv", index=False)
+data.to_csv("dataset/ProcessedData.csv", index=False)

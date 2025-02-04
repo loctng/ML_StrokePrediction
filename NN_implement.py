@@ -5,7 +5,7 @@ from keras import Sequential, layers, losses
 import keras_tuner
 
 
-data = pd.read_csv("ProcessedData.csv")
+data = pd.read_csv("dataset/ProcessedData.csv")
 
 # Splitting data into training and testing set
 x = data.drop(columns=["stroke"])
@@ -16,7 +16,7 @@ x_train, x_val, y_train, y_val = train_test_split(x_train, y_train, test_size=0.
 
 def nnModel(hp):
   model = Sequential()
-  model.add(layers.Input(shape=(12,)))
+  model.add(layers.Input(shape=(20,)))
   
   # Hidden layers
   for i in range(hp.Int('num_layers', 1, 2)):
